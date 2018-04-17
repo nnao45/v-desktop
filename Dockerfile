@@ -36,11 +36,7 @@ RUN apt-get update && \
     apt-get install -y \
       language-pack-ja-base language-pack-ja \
       ibus-anthy \
-      fonts-takao \
-      && \
-    # Clean up
-    apt-get clean && \
-    rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
+      fonts-takao 
 
 # Install noVNC
 RUN mkdir -p /opt/noVNC/utils/websockify && \
@@ -64,20 +60,21 @@ RUN \
 
 # DownLoad and install Vim
 RUN \
- apt-get update \
- && apt-get install -y software-properties-common python-software-properties \
+ apt-get install -y software-properties-common python-software-properties \
  && add-apt-repository ppa:jonathonf/vim \
  && apt-get update -y \
  && apt-get install -y vim \
-    # Clean up
-    && apt-get clean \
-    && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
 # DownLoad and install Powerlice fonts
 RUN \
  wget https://bootstrap.pypa.io/get-pip.py && python get-pip.py \
  && pip install powerline-status \
  && git clone https://github.com/powerline/fonts.git && cd fonts && sh ./install.sh
+ 
+# Installer Clean up
+RUN \
+ apt-get clean && \
+ rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
 # Rename user directories Japanese to English.
 RUN LANG=C xdg-user-dirs-update --force
